@@ -74,15 +74,7 @@ putAt ∷
 putAt sym = modifyAt sym <<< const
 
 get ∷ ∀ s r. Run (state ∷ STATE s | r) s
-get = getAt _state
-
-getAt ∷
-  ∀ q sym s r
-  . IsSymbol sym
-  ⇒ RowCons sym (STATE s) q r
-  ⇒ SProxy sym
-  → Run r s
-getAt sym = liftStateAt sym $ State id id
+get = liftState $ State identity identity
 
 gets ∷ ∀ s t r. (s → t) → Run (state ∷ STATE s | r) t
 gets = getsAt _state

@@ -17,8 +17,6 @@ module Run.Writer
 import Prelude
 
 import Data.Either (Either(..))
-import Data.Monoid (class Monoid, mempty)
-import Data.Symbol (class IsSymbol)
 import Data.Tuple (Tuple(..))
 import Run (Run, SProxy(..), FProxy)
 import Run as Run
