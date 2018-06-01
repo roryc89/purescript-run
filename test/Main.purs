@@ -9,8 +9,10 @@ import Effect (Effect)
 import Effect.Console (logShow, log)
 import Run (EFFECT, FProxy, Run, SProxy(..), lift, liftEffect, on, extract, runBaseEffect, run, send)
 import Run.Choose (CHOOSE, runChoose)
-import Run.Except (EXCEPT, runExcept, throw, catch)
-import Run.State (STATE, runState, get, gets, put, modify)
+import Run.Except (EXCEPT, catch, runExcept, runExceptAt, throw, throwAt)
+import Run.Reader (READER, ask, runReader)
+import Run.State (STATE, get, gets, modify, put, putAt, runState, runStateAt)
+import Run.Writer (WRITER, runWriter, tell)
 import Test.Examples as Examples
 
 data Talk a
@@ -91,6 +93,10 @@ main = do
     # run runSpeak
     # runBaseEffect
 
+  program4 "42" # runStateAt _st "" # runExceptAt _exc # extract # logShow
+  program4 "42" # runExceptAt _exc # runStateAt _st "" # extract # logShow
+  program4 "12" # runStateAt _st "" # runExceptAt _exc # extract # logShow
+
   yesProgram
     # catch (liftEffect <<< log)
     # runState 10
@@ -101,6 +107,11 @@ main = do
     # runChoose
     # runBaseEffect
   logShow (as ∷ Array Int)
+
+  let
+    tco1 = stateTCO # runState 0
+    tco2 = writerTCO # runWriter
+    tco3 = readerTCO # runReader unit
 
   Examples.main >>= logShow
   Examples.mainSleep
